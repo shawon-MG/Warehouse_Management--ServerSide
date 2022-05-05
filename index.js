@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 4000;
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 
 const cors = require('cors');
@@ -13,21 +13,14 @@ require('dotenv').config();
 app.use(cors());
 app.use(express.json());
 
-
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.m8chh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-// client.connect(err => {
-//     const collection = client.db("test").collection("devices");
-//     console.log('Connected with MongoDB-Atlas');
-
-//     // perform actions on the collection object
-//     client.close();
-// });
 async function run() {
     try {
         await client.connect();
         const inventoryItems = client.db('electronics-inventory-project-11').collection('items');
+        console.log("DB Also Connected");
+
 
         // To get / read all documents from database
         app.get('/items', async (req, res) => {
@@ -35,6 +28,14 @@ async function run() {
             const cursor = inventoryItems.find(query);
             const items = await cursor.toArray();
             res.send(items);
+        });
+
+        // To get / read one document by _id
+        app.get('/items/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const item = await inventoryItems.findOne(query);
+            res.send(item);
         });
     }
     finally {
