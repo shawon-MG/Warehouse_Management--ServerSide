@@ -38,9 +38,18 @@ async function run() {
             res.send(item);
         });
 
+        // Posting data from UI
         app.post('/items', async (req, res) => {
             const newItem = req.body;
             const result = await inventoryItems.insertOne(newItem);
+            res.send(result);
+        });
+
+        // Delete data form UI
+        app.delete('/items/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await inventoryItems.deleteOne(query);
             res.send(result);
         });
     }
