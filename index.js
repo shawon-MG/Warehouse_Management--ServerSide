@@ -37,6 +37,12 @@ async function run() {
             const item = await inventoryItems.findOne(query);
             res.send(item);
         });
+
+        app.post('/items', async (req, res) => {
+            const newItem = req.body;
+            const result = await inventoryItems.insertOne(newItem);
+            res.send(result);
+        });
     }
     finally {
         // No code right now. Can be written if needed
