@@ -24,10 +24,20 @@ async function run() {
 
         // To get / read all documents from database
         app.get('/items', async (req, res) => {
-            const query = {};
-            const cursor = inventoryItems.find(query);
-            const items = await cursor.toArray();
-            res.send(items);
+            const email = req.params.email;
+            if (email) {
+                const email = req.params.email;
+                const query = { email: email };
+                const cursor = inventoryItems.find(query);
+                const items = await cursor.toArray();
+                res.send(items);
+            }
+            else {
+                const query = {};
+                const cursor = inventoryItems.find(query);
+                const items = await cursor.toArray();
+                res.send(items);
+            }
         });
 
         // To get / read one document by _id
@@ -52,13 +62,40 @@ async function run() {
             const result = await inventoryItems.deleteOne(query);
             res.send(result);
         });
+
+        // app.get('/items', async (req, res) => {
+        //     const email = req.params.email;
+        //     const query = { email: email };
+        //     const cursor = inventoryItems.find(query);
+        //     const items = await cursor.toArray();
+        //     res.send(items);
+        // });
+
+        // Update
+        app.put('/items/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log(id);
+            // const data = req.body;
+            // console.log(data);
+            const updatedQuantity = { quantity: Number(req.body.quantity) };
+            // const updateQuantity = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: updatedQuantity
+
+            }
+            const result = await inventoryItems.updateOne(filter, updatedDoc, options);
+            res.send(result);
+            console.log(updatedQuantity);
+            console.log('data passed');
+        });
     }
     finally {
         // No code right now. Can be written if needed
     }
 };
 run().catch(console.dir);
-
 
 // Root API : (getting / reading data form root)
 app.get('/', (req, res) => {
