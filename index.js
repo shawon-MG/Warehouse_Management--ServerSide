@@ -77,7 +77,7 @@ async function run() {
             console.log(id);
             // const data = req.body;
             // console.log(data);
-            const updatedQuantity = { quantity: Number(req.body.quantity) };
+            const updatedQuantity = { quantity: (req.body.quantity) };
             // const updateQuantity = req.body;
             const filter = { _id: ObjectId(id) };
             const options = { upsert: true };
