@@ -63,32 +63,15 @@ async function run() {
             res.send(result);
         });
 
-        // app.get('/items', async (req, res) => {
-        //     const email = req.params.email;
-        //     const query = { email: email };
-        //     const cursor = inventoryItems.find(query);
-        //     const items = await cursor.toArray();
-        //     res.send(items);
-        // });
-
         // Update
         app.put('/items/:id', async (req, res) => {
             const id = req.params.id;
-            console.log(id);
-            // const data = req.body;
-            // console.log(data);
             const updatedQuantity = { quantity: (req.body.quantity) };
-            // const updateQuantity = req.body;
             const filter = { _id: ObjectId(id) };
             const options = { upsert: true };
-            const updatedDoc = {
-                $set: updatedQuantity
-
-            }
+            const updatedDoc = { $set: updatedQuantity }
             const result = await inventoryItems.updateOne(filter, updatedDoc, options);
             res.send(result);
-            console.log(updatedQuantity);
-            console.log('data passed');
         });
     }
     finally {
