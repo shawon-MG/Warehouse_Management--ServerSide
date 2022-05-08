@@ -24,7 +24,8 @@ async function run() {
 
         // To get / read all documents from database
         app.get('/items', async (req, res) => {
-            const email = req.params.email;
+            const email = req.query.email;
+            console.log(email);
             if (email) {
                 const email = req.params.email;
                 const query = { email: email };
